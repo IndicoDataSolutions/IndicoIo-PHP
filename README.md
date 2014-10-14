@@ -1,7 +1,7 @@
 IndicoIo-php
 =========
 
-A PHP wrapper for the indico APIs.
+A simple PHP wrapper for the indico APIs.
 
 
 
