@@ -1,9 +1,7 @@
-[![Build Status](https://travis-ci.org/IndicoDataSolutions/IndicoIo-PHP.svg?branch=master)](https://travis-ci.org/IndicoDataSolutions/IndicoIo-PHP)
-
 IndicoIo-php
 =========
 
-PHP Rest Api Wrapper for IndicoIo
+A PHP wrapper for the indico APIs.
 
 
 
