@@ -105,6 +105,17 @@ class IndicoIo
 		return self::_callService($images, 'fer', $params);
 	}
 
+	public static function content_filtering($image, $params=array())
+	{
+		return self::_callService($image, 'contentfiltering', $params);
+	}
+
+	public static function batch_content_filtering($image, $params=array())
+	{
+		$params["batch"] = true;
+		return self::_callService($image, 'contentfiltering', $params);
+	}
+
 	public static function facial_features($image, $params=array())
 	{
 		return self::_callService($image, 'facialfeatures', $params);

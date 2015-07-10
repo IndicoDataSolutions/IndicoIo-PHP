@@ -100,6 +100,16 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($keys_expected, $keys_result);
     }
 
+    public function testContentFiltering()
+    {
+        self::skipIfMissingCredentials();
+        $file_content =  file_get_contents(dirname(__FILE__) .DIRECTORY_SEPARATOR.'/data_test.json');
+        $image = json_decode($file_content, true);
+        $data = IndicoIo::content_filtering($image);
+
+        $this->assertEquals(gettype($data), 'double');
+    }
+
     public function testFacialFeaturesWhenGivenTheRightParameters()
     {
         self::skipIfMissingCredentials();
@@ -206,6 +216,19 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($keys_expected, $keys_result);
     }
 
+    public function testBatchContentFiltering()
+    {
+        self::skipIfMissingCredentials();
+        $file_content =  file_get_contents(dirname(__FILE__) .DIRECTORY_SEPARATOR.'/data_test.json');
+        $image = json_decode($file_content, true);
+        $examples = array($image, $image);
+        $data = IndicoIo::batch_content_filtering($examples);
+
+        $this->assertEquals(count($data), count($examples));
+
+        $datapoint = $data[0];
+        $this->assertEquals(gettype($datapoint), 'double');
+    }
     public function testBatchFacialFeatures()
     {
         self::skipIfMissingCredentials();
