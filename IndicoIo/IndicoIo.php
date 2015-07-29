@@ -3,6 +3,7 @@
 namespace IndicoIo;
 use Exception;
 use Utils\Multi as Multi;
+use Utils\Image as Image;
 use Configure\Configure as Configure;
 
 require_once("Configure.php");
@@ -14,7 +15,7 @@ require_once("Utils.php");
 class IndicoIo
 {
 	public static $config;
-	public static $TEXT_APIS = array("sentiment", "text_tags", "language", "political", "keywords", "twitter_engagement");
+	public static $TEXT_APIS = array("sentiment", "sentimenthq", "named_entities", "text_tags", "language", "political", "keywords");
 	public static $IMAGE_APIS = array("fer", "image_features", "facial_features", "content_filter");
 
 	protected static function api_url($cloud = false, $service, $batch = false, $api_key, $params = array()) {
@@ -96,12 +97,14 @@ class IndicoIo
 
 	public static function fer($image, $params=array())
 	{
+		$image = Image::processImage($image, 48, false);
 		return self::_callService($image, 'fer', $params);
 	}
 
 	public static function batch_fer($images, $params=array())
 	{
 		$params["batch"] = true;
+		$images = Image::processImages($images, 48, false);
 		return self::_callService($images, 'fer', $params);
 	}
 
@@ -126,48 +129,48 @@ class IndicoIo
 		$params['batch'] = true;
 		return self::_callService($text, 'namedentities', $params);
 	}
-	
+
 	public static function twitter_engagement($text, $params=array())
 	{
 		return self::_callService($text, 'twitterengagement', $params);
 	}
 
-	public static function batch_twitter_engagement($text, $params=array())
-	{
-		$params['batch'] = true;
-		return self::_callService($text, 'twitterengagement', $params);
-	}
-
 	public static function facial_features($image, $params=array())
 	{
+		$image = Image::processImage($image, 64, false);
 		return self::_callService($image, 'facialfeatures', $params);
 	}
 
 	public static function batch_facial_features($images, $params=array())
 	{
 		$params["batch"] = true;
+		$images = Image::processImages($images, 64, false);
 		return self::_callService($images, 'facialfeatures', $params);
 	}
 
 	public static function image_features($image, $params=array())
 	{
+		$image = Image::processImage($image, 64, false);
 		return self::_callService($image, 'imagefeatures', $params);
 	}
 
 	public static function batch_image_features($images, $params=array())
 	{
 		$params["batch"] = true;
+		$images = Image::processImages($images, 64, false);
 		return self::_callService($images, 'imagefeatures', $params);
 	}
 
 	public static function content_filter($image, $params=array())
 	{
+		$image = Image::processImage($image, 128, true);
 		return self::_callService($image, 'contentfiltering', $params);
 	}
 
 	public static function batch_content_filter($images, $params=array())
 	{
 		$params["batch"] = true;
+		$images = Image::processImages($images, 128, true);
 		return self::_callService($images, 'contentfiltering', $params);
 	}
 
@@ -206,6 +209,7 @@ class IndicoIo
 		$converted_apis = Multi::filterApis($apis, self::$IMAGE_APIS);
 		$params["apis"] = $converted_apis;
 		$params["batch"] = true;
+		$images = Image::processImages($images, 64, false);
 		$results = self::_callService($images, "apis", $params);
 		return Multi::convertResults($results, $apis);
 	}
