@@ -35,7 +35,7 @@ Class Image
 
     public static function resizeImage($image, $size, $min_axis) {
         // Check Aspect Ratio
-        $ratio = ($image -> getSourceWidth())/($image -> getSourceHeight());
+        $ratio = ($image->getSourceWidth())/($image->getSourceHeight());
         if ($ratio >= 10 || $ratio <= .1) {
             echo "For best performance, we recommend images of apsect ratio less than 1:10.";
         }

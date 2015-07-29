@@ -3,6 +3,9 @@
 namespace IndicoIo\Test;
 use \IndicoIo\IndicoIo as IndicoIo;
 use Configure\Configure as Configure;
+use Utils\Image as Image;
+use \Eventviva\ImageResize;
+
 
 class IndicoIoTest extends \PHPUnit_Framework_TestCase
 {
@@ -147,7 +150,7 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
     {
         self::skipIfMissingCredentials();
 
-        $image = file_get_contents(dirname(__FILE__) .DIRECTORY_SEPARATOR.'/data_test.json');
+        $image = file_get_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'/data_test.json');
         $data = IndicoIo::content_filter($image);
 
         $this->assertGreaterThan(-0.0000001, $data);
@@ -159,7 +162,7 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
     public function testFacialFeaturesWhenGivenTheRightParameters()
     {
         self::skipIfMissingCredentials();
-        $image = file_get_contents(dirname(__FILE__) .DIRECTORY_SEPARATOR.'/data_test.json');
+        $image = file_get_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'/data_test.json');
         $data = IndicoIo::facial_features($image);
 
         $this->assertEquals(count($data), 48);
@@ -168,7 +171,7 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
     public function testImageFeaturesWhenGivenTheRightParameters()
     {
         self::skipIfMissingCredentials();
-        $image = file_get_contents(dirname(__FILE__) .DIRECTORY_SEPARATOR.'/data_test.json');
+        $image = file_get_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'/data_test.json');
         $data = IndicoIo::image_features($image);
 
         $this->assertEquals(count($data), 2048);
@@ -423,6 +426,25 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
 
         # reset to previous configuration
         putenv("INDICO_API_KEY=$prev_api_key");
+    }
+
+    public function testImageMinResizeFunctionality() {
+        $imageb64 = file_get_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'/data_test.json');
+        $pre_image = ImageResize::createFromString(base64_decode($imageb64));
+        $pre_width = $pre_image->getSourceWidth();
+        $pre_height = $pre_image->getSourceHeight();
+
+        $image = Image::processImage($imageb64, 128, true);
+        $image = ImageResize::createFromString(base64_decode($image));
+        $width = $image->getSourceWidth();
+        $height = $image->getSourceHeight();
+
+        $this->assertEquals($pre_width/$pre_height, $width/$height);
+        if ($pre_width > $pre_height) {
+            $this->assertEquals($width, 128);
+        } else {
+            $this->assertEquals($height, 128);
+        }
     }
 
     public function testConfigureFromConfigFile()
