@@ -15,11 +15,7 @@ Class Image
     }
     public static function processImage($string, $size, $min_axis) {
         if (gettype($string) == "array") {
-            echo "Image input as an array will be deprecated. Please use filepath or base64 string";
-            // Causes Execution Halt
-            // trigger_error(
-            //     "Image input as an array will be deprecated. Please use filepath or base64 string");
-            return $string;
+            return self::processImages($string ,$size, $min_axis);
         }
 
         if (file_exists($string)) {
