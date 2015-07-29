@@ -133,7 +133,7 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
         self::skipIfMissingCredentials();
         $keys_expected = array('Angry', 'Sad', 'Neutral', 'Surprise', 'Fear', 'Happy');
         $image = file_get_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'/data_test.json');
-        
+
         $data = IndicoIo::fer($image);
         $keys_result = array_keys($data);
 
