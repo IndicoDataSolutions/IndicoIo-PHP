@@ -40,8 +40,9 @@ Class Image
             $image -> resizeToBestFit($size, $size);
             return base64_encode($image);
         }
-
-        $image -> resize($size, $size);
+        if ($size) {
+            $image -> resize($size, $size);
+        }
         $image -> getImageAsString(IMAGETYPE_PNG, 4);
         return base64_encode($image);
     }

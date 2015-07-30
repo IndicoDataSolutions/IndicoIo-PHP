@@ -68,7 +68,8 @@ class IndicoIo
 
 	public static function fer($image, $params=array())
 	{
-		$image = Image::processImage($image, 48, false);
+		$size = array_key_exists("detect", $params) && $params["detect"] ? false : 48;
+		$image = Image::processImage($image, $size, false);
 		return self::_callService($image, 'fer', $params);
 	}
 
