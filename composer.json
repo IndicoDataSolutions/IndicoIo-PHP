@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": ">=5.3",
+        "eventviva/php-image-resize": "1.5.*",
         "ext-curl": "*"
     },
 	"require-dev": {

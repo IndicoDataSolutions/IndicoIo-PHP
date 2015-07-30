@@ -22,7 +22,7 @@ Installation
 }
 
 ```
-3. Run this command : 
+3. Run this command :
 
 
 ```sh
@@ -43,7 +43,7 @@ use \IndicoIo\IndicoIo as IndicoIo;
 
 print_r(IndicoIo::sentiment('Great food -- would recommend!'));
 
-=> Array ( [Sentiment] => 0.86122900137512 ) 
+=> Array ( [Sentiment] => 0.86122900137512 )
 
 print_r(IndicoIo::political('Free market economy'));
 
@@ -63,13 +63,13 @@ print_r(IndicoIo::text_tags('This coconut green tea is amazing!'));
 => Array ( [food]: 0.3713687833244494, [cars]: 0.0037924017632370586, ...)
 
 
-``` 
+```
 
 Batch API
 ----------------
 
 ```php
-IndicoIo::batch_sentiment(array('Text to analyze', 'More text'), 'example-api-key')
+IndicoIo::sentiment(array('Text to analyze', 'More text'), 'example-api-key')
 ```
 
 API key credentials can also be set as the environment variable `$INDICO_API_KEY` or as `api_key` in the indicorc file.
@@ -83,7 +83,7 @@ If you're looking to use indico's API for high throughput applications, please c
 IndicoIo::sentiment("Text to analyze", "example-api-key", "example-cloud")
 ```
 
-The third `cloud` parameter redirects API calls to your private cloud hosted at `[cloud].indico.domains` 
+The third `cloud` parameter redirects API calls to your private cloud hosted at `[cloud].indico.domains`
 
 Private cloud subdomains can also be set as the environment variable `$INDICO_CLOUD` or as `cloud` in the indicorc file.
 
