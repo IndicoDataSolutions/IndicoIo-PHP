@@ -36,7 +36,7 @@ class IndicoIo
 		foreach ($params as $key => $value) {
 			$url = $url . "&" . $key . "=" . $value;
 		}
-
+		
 		return $url;
 	}
 
@@ -308,11 +308,15 @@ class IndicoIo
 		$cloud = self::get($params, "cloud");
 		$batch = gettype($data) == "array";
 		$apis = self::get($params, "apis");
+		$version = self::get($params, "version");
 
 		# Set up Url Paramters
 		$url_params = array();
 		if ($apis) {
 			$url_params["apis"] = $apis;
+		}
+		if ($version) {
+			$url_params["version"] = $version;
 		}
 
 		# Set up Request
