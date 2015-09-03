@@ -16,7 +16,7 @@ class IndicoIo
 {
 	public static $config;
 	public static $TEXT_APIS = array("sentiment", "sentimenthq", "named_entities", "text_tags", "language", "political", "keywords", "twitter_engagement");
-	public static $IMAGE_APIS = array("fer", "image_features", "facial_features", "content_filter");
+	public static $IMAGE_APIS = array("fer", "image_features", "image_recognition", "facial_features", "content_filter");
 
 	protected static function api_url($cloud = false, $service, $batch = false, $api_key, $params = array()) {
 		$root_url = self::$config['default_host'];
@@ -36,7 +36,7 @@ class IndicoIo
 		foreach ($params as $key => $value) {
 			$url = $url . "&" . $key . "=" . $value;
 		}
-		
+
 		return $url;
 	}
 
@@ -224,8 +224,14 @@ class IndicoIo
 
 	public static function image_features($image, $params=array())
 	{
-		$image = Image::processImage($image, 64, false);
+		$image = Image::processImage($image, 144, true);
 		return self::_callService($image, 'imagefeatures', $params);
+	}
+
+	public static function image_recognition($image, $params=array())
+	{
+		$image = Image::processImage($image, 144, true);
+		return self::_callService($image, 'imagerecognition', $params);
 	}
 
 	public static function batch_image_features($image, $params=array())
