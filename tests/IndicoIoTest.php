@@ -96,20 +96,30 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($keys_result), 111);
     }
 
-    public function testTopN() 
+    public function testTopN()
     {
         $data = IndicoIo::text_tags('I want to move to New York City!', array("top_n"=>10));
         $keys_result = array_keys($data);
         $this->assertEquals(count($keys_result), 10);
     }
 
-    public function testThreshold() 
+    public function testThreshold()
     {
         $data = IndicoIo::text_tags('I want to move to New York City!', array("threshold"=>0.05));
         $values = array_values($data);
         for ($i = 0; $i < count($values); $i++) {
             $this->assertGreaterThan(0.05, $values[$i]);
-        } 
+        }
+    }
+
+    public function testMyersBriggs()
+    {
+        self::skipIfMissingCredentials();
+        $data = IndicoIo::myers_briggs('I want to move to New York City!');
+        $keys_result = array_keys($data);
+        $this->assertEquals(count($keys_result), 9);
+        $this->assertTrue(array_key_exists('I', $keys_result));
+        $this->assertTrue(array_key_exists('personality', $keys_result));
     }
 
     public function testNamedEntities()
@@ -267,7 +277,7 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
         $image = file_get_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'/data_test.json');
         $data = IndicoIo::image_features($image);
 
-        $this->assertEquals(count($data), 2048);
+        $this->assertEquals(count($data), 4096);
     }
 
     public function testExplicitAuthArgument()
@@ -347,6 +357,23 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
         $datapoint = $data[0];
         $keys_result = array_keys($datapoint);
         $this->assertEquals(count($keys_result), 111);
+    }
+
+    public function testBatchMyersBriggs()
+    {
+        self::skipIfMissingCredentials();
+        $examples = array(
+            'On Monday, the president will be ...',
+            'We are in for a windy Thursday and a rainy Friday'
+        );
+        $data = IndicoIo::myers_briggs($examples);
+        $this->assertEquals(count($data), count($examples));
+
+
+        $keys_result = array_keys($data[0]);
+        $this->assertEquals(count($keys_result), 9);
+        $this->assertTrue(array_key_exists('I', $keys_result));
+        $this->assertTrue(array_key_exists('personality', $keys_result));
     }
 
     public function testBatchNamedEntities()
@@ -459,7 +486,7 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($data), count($examples));
 
         $datapoint = $data[0];
-        $this->assertEquals(count($datapoint), 2048);
+        $this->assertEquals(count($datapoint), 4096);
     }
 
     public function testBatchFacialLocalization()

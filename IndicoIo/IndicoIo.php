@@ -15,7 +15,7 @@ require_once("Utils.php");
 class IndicoIo
 {
 	public static $config;
-	public static $TEXT_APIS = array("sentiment", "sentimenthq", "named_entities", "text_tags", "language", "political", "keywords", "twitter_engagement");
+	public static $TEXT_APIS = array("sentiment", "sentimenthq", "named_entities", "text_tags", "language", "political", "keywords", "twitter_engagement", "myers_briggs");
 	public static $IMAGE_APIS = array("fer", "image_features", "image_recognition", "facial_features", "content_filter");
 
 	protected static function api_url($cloud = false, $service, $batch = false, $api_key, $params = array()) {
@@ -154,6 +154,10 @@ class IndicoIo
 		return self::keywords($text, $params);
 	}
 
+	public static function myers_briggs($text, $params=array())
+	{
+		return self::_callService($text, 'myersbriggs', $params);
+	}
 
 	public static function named_entities($text, $params=array())
 	{
@@ -225,6 +229,9 @@ class IndicoIo
 	public static function image_features($image, $params=array())
 	{
 		$image = Image::processImage($image, 144, true);
+		if (!array_key_exists('v', $params) || !array_key_exists('version', $params)){
+			$params['version'] = 3;
+		}
 		return self::_callService($image, 'imagefeatures', $params);
 	}
 
@@ -258,6 +265,7 @@ class IndicoIo
 			"Please call `content_filter` instead with the same arguments",
 			E_USER_WARNING
 		);
+
 		return self::content_filter($image, $params);
 	}
 
@@ -344,7 +352,7 @@ class IndicoIo
 
 		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 		$headers = mb_substr($response, 0, $header_size);
-		$result = mb_substr($response, $header_size);  
+		$result = mb_substr($response, $header_size);
 
 		$headers = explode("\n", $headers);
 		foreach($headers as $header) {
