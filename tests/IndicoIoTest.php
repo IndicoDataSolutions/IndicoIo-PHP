@@ -112,14 +112,22 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testMyersBriggs()
+    public function testPersonality()
     {
         self::skipIfMissingCredentials();
-        $data = IndicoIo::myers_briggs('I want to move to New York City!');
+        $data = IndicoIo::personality('I want to move to New York City!');
         $keys_result = array_keys($data);
-        $this->assertEquals(count($keys_result), 9);
-        $this->assertTrue(array_key_exists('I', $keys_result));
-        $this->assertTrue(array_key_exists('personality', $keys_result));
+        $this->assertEquals(count($keys_result), 4);
+        $this->assertTrue(array_key_exists('Extraversion', $keys_result));
+    }
+
+    public function testPersonas()
+    {
+        self::skipIfMissingCredentials();
+        $data = IndicoIo::personas('I want to move to New York City!');
+        $keys_result = array_keys($data);
+        $this->assertEquals(count($keys_result), 8);
+        $this->assertTrue(array_key_exists('commander', $keys_result));
     }
 
     public function testNamedEntities()
@@ -359,21 +367,36 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($keys_result), 111);
     }
 
-    public function testBatchMyersBriggs()
+    public function testBatchPersonality()
     {
         self::skipIfMissingCredentials();
         $examples = array(
             'On Monday, the president will be ...',
             'We are in for a windy Thursday and a rainy Friday'
         );
-        $data = IndicoIo::myers_briggs($examples);
+        $data = IndicoIo::personality($examples);
         $this->assertEquals(count($data), count($examples));
 
 
         $keys_result = array_keys($data[0]);
-        $this->assertEquals(count($keys_result), 9);
-        $this->assertTrue(array_key_exists('I', $keys_result));
-        $this->assertTrue(array_key_exists('personality', $keys_result));
+        $this->assertEquals(count($keys_result), 4);
+        $this->assertTrue(array_key_exists('Extraversion', $keys_result));
+    }
+
+    public function testBatchPersonas()
+    {
+        self::skipIfMissingCredentials();
+        $examples = array(
+            'On Monday, the president will be ...',
+            'We are in for a windy Thursday and a rainy Friday'
+        );
+        $data = IndicoIo::personas($examples);
+        $this->assertEquals(count($data), count($examples));
+
+
+        $keys_result = array_keys($data[0]);
+        $this->assertEquals(count($keys_result), 4);
+        $this->assertTrue(array_key_exists('commander', $keys_result));
     }
 
     public function testBatchNamedEntities()
