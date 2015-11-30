@@ -118,7 +118,7 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
         $data = IndicoIo::personality('I want to move to New York City!');
         $keys_result = array_keys($data);
         $this->assertEquals(count($keys_result), 4);
-        $this->assertTrue(array_key_exists('Extraversion', $keys_result));
+        $this->assertTrue(in_array('extraversion', $keys_result));
     }
 
     public function testPersonas()
@@ -126,8 +126,8 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
         self::skipIfMissingCredentials();
         $data = IndicoIo::personas('I want to move to New York City!');
         $keys_result = array_keys($data);
-        $this->assertEquals(count($keys_result), 8);
-        $this->assertTrue(array_key_exists('commander', $keys_result));
+        $this->assertEquals(count($keys_result), 16);
+        $this->assertTrue(in_array('commander', $keys_result));
     }
 
     public function testNamedEntities()
@@ -380,7 +380,7 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
 
         $keys_result = array_keys($data[0]);
         $this->assertEquals(count($keys_result), 4);
-        $this->assertTrue(array_key_exists('Extraversion', $keys_result));
+        $this->assertTrue(in_array('extraversion', $keys_result));
     }
 
     public function testBatchPersonas()
@@ -395,8 +395,8 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
 
 
         $keys_result = array_keys($data[0]);
-        $this->assertEquals(count($keys_result), 4);
-        $this->assertTrue(array_key_exists('commander', $keys_result));
+        $this->assertEquals(count($keys_result), 16);
+        $this->assertTrue(in_array('commander', $keys_result));
     }
 
     public function testBatchNamedEntities()

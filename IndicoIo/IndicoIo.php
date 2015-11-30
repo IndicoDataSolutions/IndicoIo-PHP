@@ -156,13 +156,13 @@ class IndicoIo
 
 	public static function personality($text, $params=array())
 	{
-		return self::_callService($text, 'myersbriggs', $params);
+		return self::_callService($text, 'personality', $params);
 	}
 
 	public static function personas($text, $params=array())
 	{
-		$params['personas'] = True;
-		return self::_callService($text, 'myersbriggs', $params);
+		$params['persona'] = True;
+		return self::_callService($text, 'personality', $params);
 	}
 
 	public static function named_entities($text, $params=array())
@@ -291,6 +291,7 @@ class IndicoIo
 		$results = self::_callService($text, "apis/multiapi", $params);
 		return Multi::convertResults($results, $apis);
 	}
+
 	public static function batch_analyze_text($text, $params=array())
 	{
 		trigger_error(
