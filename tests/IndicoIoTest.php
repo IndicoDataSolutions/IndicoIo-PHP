@@ -40,20 +40,20 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
      * @expectedException Exception
      * @expectedExceptionMessage Accepted datatypes: string
      */
-    public function testPoliticalRaisesExceptionWhenGivenInteger()
+    public function testTextRaisesExceptionWhenGivenInteger()
     {
         self::skipIfMissingCredentials();
-        $data_integer_request = IndicoIo::political(2);
+        $data_integer_request = IndicoIo::personality(2);
     }
 
     /**
      * @expectedException Exception
      * @expectedExceptionMessage Accepted datatypes: string
      */
-    public function testPoliticalRaisesExceptionWhenGivenBool()
+    public function testTextRaisesExceptionWhenGivenBool()
     {
         self::skipIfMissingCredentials();
-        $data_bool_request = IndicoIo::political(true);
+        $data_bool_request = IndicoIo::personality(true);
     }
 
     public function testSentimentWhenGivenTheRightParameters()
