@@ -4,6 +4,7 @@ namespace IndicoIo;
 use Exception;
 use Utils\Multi as Multi;
 use Utils\Image as Image;
+use Utils\ImageException as ImageException;
 use Configure\Configure as Configure;
 
 require_once("Configure.php");
@@ -18,7 +19,7 @@ class IndicoIo
 	public static $TEXT_APIS = array("sentiment", "sentimenthq", "named_entities", "text_tags", "language", "political", "keywords", "twitter_engagement", "personality");
 	public static $IMAGE_APIS = array("fer", "image_features", "image_recognition", "facial_features", "content_filter");
 
-	protected static function api_url($cloud = false, $service, $batch = false, $api_key, $params = array()) {
+	protected static function api_url($cloud = false, $service, $batch = false, $method = false, $api_key, $params = array()) {
 		$root_url = self::$config['default_host'];
 		if ($cloud) {
 			$root_url = "http://$cloud.indico.domains";
@@ -29,6 +30,10 @@ class IndicoIo
 		$url = "$root_url/$service";
 		if ($batch) {
 			$url = $url . "/batch";
+		}
+
+		if ($method) {
+			$url = $url . "/" . $method;
 		}
 
 		$url = $url . "?key=" . $api_key;
@@ -43,81 +48,28 @@ class IndicoIo
 
 	public static function political($text, $params=array())
 	{
-		return self::_callService($text, 'political', $params);
+		return self::_callService($text, 'political', 'predict', $params);
 	}
-
-	public static function batch_political($text, $params=array())
-	{
-		trigger_error(
-			"The `batch_political` function will be deprecated in the next major upgrade." .
-			"Please call `political` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::political($text, $params);
-	}
-
 
 	public static function sentiment($text, $params=array())
 	{
-		return self::_callService($text, 'sentiment', $params);
+		return self::_callService($text, 'sentiment', 'predict', $params);
 	}
-
-	public static function batch_sentiment($text, $params=array())
-	{
-		trigger_error(
-			"The `batch_sentiment` function will be deprecated in the next major upgrade." .
-			"Please call `sentiment` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::sentiment($text, $params);
-	}
-
 
 	public static function sentiment_hq($text, $params=array())
 	{
-        return self::_callService($text, 'sentimenthq', $params);
+        return self::_callService($text, 'sentimenthq', 'predict', $params);
 	}
-
-	public static function batch_sentiment_hq($text, $params=array())
-	{
-		trigger_error(
-			"The `batch_sentiment_hq` function will be deprecated in the next major upgrade." .
-			"Please call `sentiment_hq` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::sentiment_hq($text, $params);
-	}
-
 
 	public static function language($text, $params=array())
 	{
 		return self::_callService($text, 'language', $params);
 	}
 
-	public static function batch_language($text, $params=array())
-	{
-		trigger_error(
-			"The `batch_language` function will be deprecated in the next major upgrade." .
-			"Please call `language` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::language($text, $params);
-	}
-
 
 	public static function text_tags($text, $params=array())
 	{
-		return self::_callService($text, 'texttags', $params);
-	}
-
-	public static function batch_text_tags($text, $params=array())
-	{
-		trigger_error(
-			"The `batch_text_tags` function will be deprecated in the next major upgrade." .
-			"Please call `text_tags` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::text_tags($text, $params);
+		return self::_callService($text, 'texttags', 'predict', $params);
 	}
 
 
@@ -125,77 +77,23 @@ class IndicoIo
 	{
 		$size = array_key_exists("detect", $params) && $params["detect"] ? false : 48;
 		$image = Image::processImage($image, $size, false);
-		return self::_callService($image, 'fer', $params);
+		return self::_callService($image, 'fer', 'predict', $params);
 	}
-
-	public static function batch_fer($text, $params=array())
-	{
-		trigger_error(
-			"The `batch_fer` function will be deprecated in the next major upgrade." .
-			"Please call `fer` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::fer($text, $params);
-	}
-
 
 	public static function keywords($text, $params=array())
 	{
-		return self::_callService($text, 'keywords', $params);
-	}
-
-	public static function batch_keywords($text, $params=array())
-	{
-		trigger_error(
-			"The `batch_keywords` function will be deprecated in the next major upgrade." .
-			"Please call `keywords` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::keywords($text, $params);
-	}
-
-	public static function personality($text, $params=array())
-	{
-		return self::_callService($text, 'personality', $params);
-	}
-
-	public static function personas($text, $params=array())
-	{
-		$params['persona'] = True;
-		return self::_callService($text, 'personality', $params);
+		return self::_callService($text, 'keywords', 'predict', $params);
 	}
 
 	public static function named_entities($text, $params=array())
 	{
-		return self::_callService($text, 'namedentities', $params);
+		return self::_callService($text, 'namedentities', 'predict', $params);
 	}
-
-	public static function batch_named_entities($text, $params=array())
-	{
-		trigger_error(
-			"The `batch_named_entities` function will be deprecated in the next major upgrade." .
-			"Please call `named_entities` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::named_entities($text, $params);
-	}
-
 
 	public static function twitter_engagement($text, $params=array())
 	{
-		return self::_callService($text, 'twitterengagement', $params);
+		return self::_callService($text, 'twitterengagement', 'predict', $params);
 	}
-
-	public static function batch_twitter_engagement($text, $params=array())
-	{
-		trigger_error(
-			"The `batch_twitter_engagement` function will be deprecated in the next major upgrade." .
-			"Please call `twitter_engagement` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::twitter_engagement($text, $params);
-	}
-
 
 	public static function intersections($input, $params=array())
 	{
@@ -211,26 +109,15 @@ class IndicoIo
 		}
 		$converted_apis = Multi::filterApis($apis, self::$TEXT_APIS);
 		$params["apis"] = $converted_apis;
-		return self::_callService($input, 'apis/intersections', $params);
+		return self::_callService($input, 'apis/intersections', false, $params);
 	}
 
 
 	public static function facial_features($image, $params=array())
 	{
 		$image = Image::processImage($image, 64, false);
-		return self::_callService($image, 'facialfeatures', $params);
+		return self::_callService($image, 'facialfeatures', 'predict', $params);
 	}
-
-	public static function batch_facial_features($image, $params=array())
-	{
-		trigger_error(
-			"The `batch_facial_features` function will be deprecated in the next major upgrade." .
-			"Please call `facial_features` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::facial_features($image, $params);
-	}
-
 
 	public static function image_features($image, $params=array())
 	{
@@ -238,49 +125,37 @@ class IndicoIo
 		if (!array_key_exists('v', $params) || !array_key_exists('version', $params)){
 			$params['version'] = 3;
 		}
-		return self::_callService($image, 'imagefeatures', $params);
+		return self::_callService($image, 'imagefeatures', 'predict', $params);
 	}
 
 	public static function image_recognition($image, $params=array())
 	{
 		$image = Image::processImage($image, 144, true);
-		return self::_callService($image, 'imagerecognition', $params);
+		return self::_callService($image, 'imagerecognition', 'predict', $params);
 	}
-
-	public static function batch_image_features($image, $params=array())
-	{
-		trigger_error(
-			"The `batch_image_features` function will be deprecated in the next major upgrade." .
-			"Please call `image_features` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::image_features($image, $params);
-	}
-
 
 	public static function content_filter($image, $params=array())
 	{
 		$image = Image::processImage($image, 128, true);
-		return self::_callService($image, 'contentfiltering', $params);
-	}
-
-	public static function batch_content_filter($image, $params=array())
-	{
-		trigger_error(
-			"The `batch_content_filter` function will be deprecated in the next major upgrade." .
-			"Please call `content_filter` instead with the same arguments",
-			E_USER_WARNING
-		);
-
-		return self::content_filter($image, $params);
+		return self::_callService($image, 'contentfiltering', 'predict', $params);
 	}
 
 	public static function facial_localization($image, $params=array())
 	{
 		$image = Image::processImage($image, false, false);
-		return self::_callService($image, 'faciallocalization', $params);
+		return self::_callService($image, 'faciallocalization', 'predict', $params);
 	}
 
+    public static function personality($text, $params=array())
+    {
+        return self::_callService($text, 'personality', 'predict', $params);
+    }
+
+    public static function personas($text, $params)
+    {
+        $params['persona'] = True;
+        return self::_callService($text, 'personality', 'predict', $params);
+    }
 
 	# Multi API Calls
 	public static function analyze_text($text, $params=array())
@@ -288,46 +163,31 @@ class IndicoIo
 		$apis = self::get($params, "apis");
 		$converted_apis = Multi::filterApis($apis, self::$TEXT_APIS);
 		$params["apis"] = $converted_apis;
-		$results = self::_callService($text, "apis/multiapi", $params);
+		$results = self::_callService($text, "apis/multiapi", false, $params);
 		return Multi::convertResults($results, $apis);
 	}
-
-	public static function batch_analyze_text($text, $params=array())
-	{
-		trigger_error(
-			"The `batch_analyze_text` function will be deprecated in the next major upgrade." .
-			"Please call `analyze_text` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::analyze_text($text, $params);
-	}
-
 
 	public static function analyze_image($image, $params=array())
 	{
 		$apis = self::get($params, "apis");
 		$converted_apis = Multi::filterApis($apis, self::$IMAGE_APIS);
 		$params["apis"] = $converted_apis;
-		$results = self::_callService($image, "apis/multiapi", $params);
+		$results = self::_callService($image, "apis/multiapi", false, $params);
 		return Multi::convertResults($results, $apis);
 	}
-	public static function batch_analyze_image($image, $params=array())
-	{
-		trigger_error(
-			"The `batch_analyze_image` function will be deprecated in the next major upgrade." .
-			"Please call `analyze_image` instead with the same arguments",
-			E_USER_WARNING
-		);
-		return self::analyze_image($image, $params);
-	}
 
-
-	protected static function _callService($data, $service, $params = array())
+	public static function _callService($data, $service, $method, $params = array())
 	{
 		# Load from configuration array if present
 		$api_key = self::get($params, 'api_key');
 		$cloud = self::get($params, "cloud");
 		$batch = gettype($data) == "array";
+		
+		# Override $batch for custom API addData method
+		if ($method == 'add_data' && !self::get($params, "batch")) {
+			$batch = False;
+		}
+
 		$apis = self::get($params, "apis");
 		$version = self::get($params, "version");
 
@@ -341,7 +201,7 @@ class IndicoIo
 		}
 
 		# Set up Request
-		$query_url = self::api_url($cloud, $service, $batch, $api_key, $url_params);
+		$query_url = self::api_url($cloud, $service, $batch, $method, $api_key, $url_params);
 		$json_data = json_encode(array_merge(array('data' => $data), $params), JSON_NUMERIC_CHECK);
 		$ch = curl_init($query_url);
 		curl_setopt($ch, CURLOPT_HEADER, true);
@@ -364,13 +224,12 @@ class IndicoIo
 		$headers = explode("\n", $headers);
 		foreach($headers as $header) {
 		    if (stripos($header, 'x-warning:') !== false) {
-		    	list ($key, $value) = explode(':', $header, 1);
+		    	list ($key, $value) = explode(':', $header, 2);
 		        trigger_error($value, E_USER_WARNING);
 		    }
 		}
 
 		curl_close($ch);
-
 		$parsed = json_decode($result, $assoc = true);
 		if (array_key_exists('results', $parsed)) {
 			return $parsed['results'];
@@ -393,6 +252,81 @@ class IndicoIo
 		unset($array[$key]);
 		return $value;
 	}
+
+	public static function collections($params = array()) {
+		return self::_callService(False, 'custom', 'collections', $params);
+	}
+}
+
+class Collection
+{
+    var $name;
+
+    function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    function addData($data, $params=array()) {
+     	$params['collection'] = $this->name;
+     	if (gettype($data[0]) != 'array') {
+     		$params['batch'] = False;
+     		try {
+     			$data[0] = Image::processImage($data[0], 144, true);
+     		} catch (ImageException $e) {}
+     	} else {
+     		$params['batch'] = True;
+     		try {
+     			$x = array();
+     			$y = array();
+     			foreach ($data as $pair) {
+     				array_push($x, $pair[0]);
+     				array_push($y, $pair[1]);
+     			}
+     			$x = Image::processImage($x, 144, true);
+                // equivalent to python's zip(x, y)
+     			$data = array_map(NULL, $x, $y);
+     		} catch (ImageException $e) {}
+     	}
+     	return IndicoIo::_callService($data, 'custom', 'add_data', $params);
+    }
+
+    function predict($data, $params=array()) {
+    	$params['collection'] = $this->name;
+    	try {
+    		$data = Image::processImage($data, 144, true);	
+    	} catch (ImageException $e) {}
+    	return IndicoIo::_callService($data, 'custom', 'predict', $params);
+    }
+
+    function removeExample($data, $params=array()) {
+    	$params['collection'] = $this->name; 
+    	try {
+    		$data = Image::processImage($data, 144, true);	
+    	} catch (ImageException $e) {}
+    	return IndicoIo::_callService($data, 'custom', 'remove_example', $params);
+    }
+
+    function train($params=array()) {
+    	$params['collection'] = $this->name;
+    	return IndicoIo::_callService(NULL, 'custom', 'train', $params);
+    }
+
+
+    function info($params=array()) {
+    	return IndicoIo::collections()[$this->name];
+    }
+
+    function wait($interval=1, $params=array()) {
+    	while ($this->info()['status'] != "ready") {
+    		sleep($interval);
+    	}
+    }
+
+   	function clear($params=array()) {
+    	$params['collection'] = $this->name;
+    	return IndicoIo::_callService(NULL, 'custom', 'clear_collection', $params);
+    }
 }
 
 

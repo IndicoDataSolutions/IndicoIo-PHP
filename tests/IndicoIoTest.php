@@ -6,6 +6,8 @@ use Configure\Configure as Configure;
 use Utils\Image as Image;
 use \Eventviva\ImageResize;
 
+\PHPUnit_Framework_Error_Warning::$enabled = FALSE;
+
 
 class IndicoIoTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,7 +40,6 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage Accepted datatypes: string
      */
     public function testTextRaisesExceptionWhenGivenInteger()
     {
@@ -48,7 +49,6 @@ class IndicoIoTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage Accepted datatypes: string
      */
     public function testTextRaisesExceptionWhenGivenBool()
     {

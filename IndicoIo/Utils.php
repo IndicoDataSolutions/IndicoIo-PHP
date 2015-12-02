@@ -2,7 +2,7 @@
 
 namespace Utils;
 use \Eventviva\ImageResize;
-class Exception extends \Exception {}
+class ImageException extends \Exception {}
 
 Class Image
 {
@@ -29,11 +29,21 @@ Class Image
         } else if (self::isValidURL($string)) {
             return $string; 
         } else {
-            return self::resizeImage(
-                ImageResize::createFromString(base64_decode($string)),
-                $size,
-                $min_axis
-            );
+            try {
+                $image = ImageResize::createFromString(base64_decode($string));
+                return self::resizeImage(
+                    $image,
+                    $size,
+                    $min_axis
+                );
+            } catch (\Exception $e) {
+                $msg = $e->getMessage();
+                if (strpos($msg, "Could not read file") !== FALSE) {
+                    throw new ImageException();
+                } else {
+                    throw $e;
+                }
+            }
         }
     }
 
