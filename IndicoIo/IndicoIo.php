@@ -126,11 +126,13 @@ class IndicoIo
     public static function relevance($text, $queries, $params=array())
     {
         $params['queries'] = $queries;
+        $params['synonyms'] = false;
         return self::_callService($text, 'relevance', 'predict', $params);
     }
 
     public static function text_features($text, $params=array())
     {
+        $params['synonyms'] = false;
         return self::_callService($text, 'textfeatures', 'predict', $params);
     }
 
