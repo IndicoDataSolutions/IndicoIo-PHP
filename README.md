@@ -5,6 +5,9 @@ IndicoIo-php
 
 PHP Rest Api Wrapper for IndicoIo
 
+Community Supported Library
+--------------
+This client library is no longer officially supported by indico. We welcome support from the community regarding bug fixes and additional features. Please submit a pull request with changes.
 
 Installation
 --------------
